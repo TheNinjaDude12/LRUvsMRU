@@ -1,0 +1,59 @@
+<html>
+    <title>External Script Example</title>
+    <!-- The defer attribute ensures the HTML parses first -->
+    
+    <body>
+        <h3>Block Size</h3><input type="number" id="block_size">
+        <h3>Cache blocks</h3><input type="number" id="cache_block">
+        <h3>Read Policy</h3> 
+
+
+        <form>
+            <p>Select read policy</p>
+            
+            <input type="radio" name="fav_language" value="HTML" checked id="Load-Through">
+            <label for="html">Load-Through</label><br>
+
+            <input type="radio" name="fav_language" value="CSS" id="Non Load-Through">
+            <label for="css">Non Load-Through</label><br>
+
+        </form>
+
+        <form>
+            <p>Select Sequence</p>
+            
+            <input type="radio" name="fav_language" value="HTML" checked id="sequential">
+            <label for="html">Sequential Sequence</label><br>
+
+            <input type="radio" name="fav_language" value="CSS" id="midrepeat">
+            <label for="css">Mid-repeat blocks</label><br>
+
+        </form>
+
+        <form>
+            <p>Select Algorithm</p>
+            
+            <input type="radio" name="fav_language" value="HTML" checked id="LRU">
+            <label for="html">Least Recently Used</label><br>
+
+            <input type="radio" name="fav_language" value="CSS" id="MRU">
+            <label for="css">Most Recently Used</label><br>
+
+        </form>
+
+
+        <button id="start_button">Start Simulation</button>
+
+        <table id="visualTable">
+        <tr>
+            <th>Block</th>
+            <th>Age</th>
+            <th>Data</th>
+        </tr>
+
+    
+        </table>
+            
+    <script src="script.js"></script>
+    </body>
+</html>
