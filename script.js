@@ -2,8 +2,8 @@ var blockSize = document.getElementById("block_size");
 var cacheBlocks = document.getElementById("cache_block")
 const buttonStart = document.getElementById("start_button")
 const Table1 = document.getElementById("visualTable")
-var CAT
-var MAT
+var CAT = 1
+var MAT = 10
 var MP 
 var hits 
 var misses 
@@ -241,6 +241,6 @@ function cal_stats(){
     var AMAT = (CAT*hit_rate) + (MAT*MP)
     var TMAT = (hits * blockSize.value * CAT) + (misses * blockSize.value * (CAT + MAT)) + (misses * CAT)
 
-    console.log("Average Memory Access Time",AMAT)
-    console.log("Total Memory Access Time",TMAT)
+    console.log("Average Memory Access Time(ns)",AMAT)
+    console.log("Total Memory Access Time(ns)",TMAT)
 }
