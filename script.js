@@ -4,6 +4,7 @@ const buttonStart = document.getElementById("start_button")
 const Table1 = document.getElementById("visualTable")
 var CAT
 var MAT
+var MP 
 var hits 
 var misses 
 var hit_rate
@@ -19,9 +20,11 @@ buttonStart.addEventListener("click", function() {
     const data_seq = []
 
     if(document.getElementById("Load-Through").checked) {
+        MP = CAT + MAT + CAT
         console.log("Load-Through")
     }
     else {
+        MP = CAT + (cacheBlocks.value * MAT) + CAT
         console.log("Non Load-Through")
     }
     
@@ -224,10 +227,20 @@ function simulate_seq(data_seq, LRU){
     console.log("Hits", hits)
     console.log("Misses", misses)
 
+    cal_stats()
+}
+
+//calculates values needed for statistical output
+function cal_stats(){
     miss_rate = misses/access_count
     hit_rate = hits/access_count
 
     console.log("Hit rate", hit_rate)
     console.log("Miss rate", miss_rate)
 
+    var AMAT = (CAT*hit_rate) + (MAT*MP)
+    var TMAT = (hits * blockSize.value * CAT) + (misses * blockSize.value * (CAT + MAT)) + (misses * CAT)
+
+    console.log("Average Memory Access Time",AMAT)
+    console.log("Total Memory Access Time",TMAT)
 }
