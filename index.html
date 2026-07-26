@@ -1,62 +1,69 @@
-<html>
-    <title>External Script Example</title>
-    <!-- The defer attribute ensures the HTML parses first -->
-    
-    <body>
-        <h3>Block Size</h3><input type="number" id="block_size">
-        <h3>Cache blocks</h3><input type="number" id="cache_block">
-        <h3>Read Policy</h3> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine 6 Barebones</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Machine 6: FA + LRU vs. FA + MRU</h1>
 
+    <fieldset>
+        <legend>Configuration</legend>
+        <label>Block Size (Words) [Power of 2]: <input type="number" id="block-size" value="16"></label><br><br>
+        <label>Number of Cache Blocks [n] (Power of 2): <input type="number" id="cache-blocks" value="4"></label><br><br>
+        <label>Read Policy: 
+            <select id="read-policy">
+                <option value="non-load-through">Non-load-through</option>
+                <option value="load-through">Load-through</option>
+            </select>
+        </label><br><br>
+        <label>View Mode:
+            <select id="view-mode">
+                <option value="animated">Step-by-Step Animated Trace</option>
+                <option value="final">Final Memory Snapshot Only</option>
+            </select>
+        </label>
+    </fieldset>
 
-        <form>
-            <p>Select read policy</p>
-            
-            <input type="radio" name="fav_language" value="HTML" checked id="Load-Through">
-            <label for="html">Load-Through</label><br>
+    <fieldset>
+        <legend>Test Cases & Memory Sequence</legend>
+        <button id="btn-seq">A. Sequential</button>
+        <button id="btn-mid">B. Mid-repeat</button>
+        <button id="btn-rand">C. Random</button>
+        <br><br>
+        <label>Memory Sequence (Blocks): <input type="text" id="memory-sequence" size="80"></label>
+    </fieldset>
 
-            <input type="radio" name="fav_language" value="CSS" id="Non Load-Through">
-            <label for="css">Non Load-Through</label><br>
+    <fieldset>
+        <legend>Access Times (ns)</legend>
+        <label>Cache Access Time: <input type="number" id="cache-time" value="1"></label>
+        <label>Memory Access Time: <input type="number" id="mem-time" value="10"></label>
+    </fieldset>
 
-        </form>
+    <br>
+    <button id="run-btn">Run Simulation</button>
+    <hr>
 
-        <form>
-            <p>Select Sequence</p>
-            
-            <input type="radio" name="fav_language" value="HTML" checked id="sequential">
-            <label for="html">Sequential Sequence</label><br>
+    <div id="results">
+        <h2>--- Fully Associative + LRU ---</h2>
+        <div id="lru-stats"></div>
+        <h3>Text Log</h3>
+        <div id="lru-log" class="text-log"></div>
+        <h3>Cache State</h3>
+        <div id="lru-table" class="table-container"></div>
 
-            <input type="radio" name="fav_language" value="CSS" id="midrepeat">
-            <label for="css">Mid-repeat blocks</label><br>
+        <br><br>
 
-            <input type="radio" name="fav_language" value="CSS" id="random">
-            <label for="css">Random sequence</label><br>
+        <h2>--- Fully Associative + MRU ---</h2>
+        <div id="mru-stats"></div>
+        <h3>Text Log</h3>
+        <div id="mru-log" class="text-log"></div>
+        <h3>Cache State</h3>
+        <div id="mru-table" class="table-container"></div>
+    </div>
 
-        </form>
-
-        <form>
-            <p>Select Algorithm</p>
-            
-            <input type="radio" name="fav_language" value="HTML" checked id="LRU">
-            <label for="html">Least Recently Used</label><br>
-
-            <input type="radio" name="fav_language" value="CSS" id="MRU">
-            <label for="css">Most Recently Used</label><br>
-
-        </form>
-
-
-        <button id="start_button">Start Simulation</button>
-
-        <table id="visualTable">
-        <tr>
-            <th>Block</th>
-            <th>Age</th>
-            <th>Data</th>
-        </tr>
-
-    
-        </table>
-            
     <script src="script.js"></script>
-    </body>
+</body>
 </html>

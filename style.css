@@ -1,0 +1,39 @@
+body {
+    font-family: sans-serif;
+    margin: 20px;
+}
+
+fieldset {
+    margin-bottom: 15px;
+}
+
+.text-log {
+    border: 1px solid #333;
+    background-color: #f9f9f9;
+    padding: 10px;
+    height: 150px;
+    overflow-y: scroll;
+    font-family: monospace;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.table-container {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 5px 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #ddd;
+}

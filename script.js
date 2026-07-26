@@ -1,246 +1,185 @@
-var blockSize = document.getElementById("block_size");
-var cacheBlocks = document.getElementById("cache_block")
-const buttonStart = document.getElementById("start_button")
-const Table1 = document.getElementById("visualTable")
-var CAT = 1
-var MAT = 10
-var MP 
-var hits 
-var misses 
-var hit_rate
-var miss_rate
-var access_count
-var AMAT
-var TMAT
+let activeIntervals = [];
 
-
-buttonStart.addEventListener("click", function() {
-    console.log(blockSize.value)
-    console.log(cacheBlocks.value)
-    const data_seq = []
-
-    if(document.getElementById("Load-Through").checked) {
-        MP = CAT + MAT + CAT
-        console.log("Load-Through")
-    }
-    else {
-        MP = CAT + (cacheBlocks.value * MAT) + CAT
-        console.log("Non Load-Through")
-    }
-    
-    //Initialize blocks
-    for (let i = 0; i < cacheBlocks.value; i++) {
-        const newRow = document.createElement("tr");
-        const blockNumber = document.createElement("td");
-            Table1.appendChild(newRow);
-            blockNumber.textContent = i
-            newRow.append(blockNumber)
-    }
-
-    //Sequential, 2n data blocks repeated twice
-    if(document.getElementById("sequential").checked) {
-
-        //Initializing an array to hold the 2n data sequence repeated twice.
-        for (let i = 0; i < 2; i++){
-            for (let j = 0; j < cacheBlocks.value*2; j++){
-                data_seq.push(j)
-            }
-        }
-        
-        access_count = data_seq.length
-
-        if(document.getElementById("LRU").checked) {
-            
-           //fill up all missing
-           const rows = document.querySelectorAll('tr');
-
-            // STAGE 1 (t=1000ms): block 0 1 2 3, age 0 1 2 3
-            setTimeout(function() {
-                rows.forEach((element, index) => {
-                    if(index == 0) return;
-                    const data = document.createElement("td");
-                    const age =  document.createElement("td");
-                    data.textContent = index - 1
-                    age.textContent = index - 1
-                    element.append(age)
-                    element.append(data)
-                });
-            }, 1000);
-
-            // STAGE 2 (t=3000ms): block 4 5 6 7, age 4 5 6 7
-            setTimeout(function() {
-                var number = cacheBlocks.value
-                var age = cacheBlocks.value
-                rows.forEach((element, index) => {
-                    if(index == 0) return;
-                    const cells = element.querySelectorAll('td')
-                    cells.forEach((cell, index) => {
-                        if(index == 0) return;
-                        if(index == 1) { cell.textContent = age; }
-                        if(index == 2) { cell.textContent = number; }
-                    });
-                    number++;
-                    age++;
-                });
-            }, 3000);
-
-            // STAGE 3 (t=5000ms): block 0 1 2 3, age 8 9 10 11
-            // STAGE 4 (t=6600ms): block 4 5 6 7, age 12 13 14 15
-            var age = 2 * cacheBlocks.value; // continues from stage 2's last age (7) -> starts at 8
-            for(let i = 0; i < 2; i++) {
-                setTimeout(function() {
-                    var number = i * cacheBlocks.value; // i=0 -> 0 1 2 3, i=1 -> 4 5 6 7
-                    rows.forEach((element, index) => {
-                        if(index == 0) return;
-                        const cells = element.querySelectorAll('td')
-                        cells.forEach((cell, index) => {
-                            if(index == 0) return;
-                            if(index == 1) { cell.textContent = age; }
-                            if(index == 2) { cell.textContent = number; }
-                        });
-                        number++;
-                        age++;
-                    });
-                }, 5000 + i * 1600);
-            }
-
-            simulate_seq(data_seq, 1)
-            
-        }
-
-        if(document.getElementById("MRU").checked) {
-            simulate_seq(data_seq, 0)
-        }
-    }
-    //Mid-repeat, one run 0 to n-1 then two runs 0 to 2n-1 then reverse 
-    if(document.getElementById("midrepeat").checked) {
-        
-        //First pushing 0 to n-1
-        for (let i = 0; i < cacheBlocks.value; i++){
-            data_seq.push(i)
-        }
-
-        //Then pushing 0 to 2n-1 twice
-        for (let i = 0; i < 2; i++){
-            for (let j = 0; j < 2*cacheBlocks.value; j++){
-                data_seq.push(j)
-            }
-        }
-        
-        //Now pushing n-1 to 0
-        for (let i = cacheBlocks.value-1; i >= 0; i--){
-            data_seq.push(i)
-        }
-
-        //Finally pushing 2n-1 to 0 twice
-        for (let i = 0; i < 2; i++){
-            for (let j = 2*cacheBlocks.value-1; j >= 0; j--){
-                data_seq.push(j)
-            }
-        }
- 
-        access_count = data_seq.length
-        
-        if(document.getElementById("LRU").checked) {
-            simulate_seq(data_seq, 1)
-        }
-
-        if(document.getElementById("MRU").checked) {
-            simulate_seq(data_seq, 0)
-        }
-    }
-    //Random sequence of 64 block accesses within 0-1023
-    if(document.getElementById("random").checked) {
-        
-        //initialize random 64 block access 
-        for (let i=0; i < 64; i++){
-            data_seq.push(Math.round(Math.random() * (1023 - 0) + 0))
-        }
-
-        access_count = data_seq.length
-
-        if(document.getElementById("LRU").checked) {
-            simulate_seq(data_seq, 1)
-        }
-
-        if(document.getElementById("MRU").checked) {
-            simulate_seq(data_seq, 0)
-        }
-    }
-})
-
-//main function to simulate sequence
-function simulate_seq(data_seq, LRU){
-    var replace
-    var pass = false
-
-    hits=0
-    misses=0
-
-    const cache = Array(cacheBlocks.value).fill(-1);
-    const age = Array(cacheBlocks.value).fill(-1);
-    
-    for (let i = 0; i < data_seq.length; i++){
-        //First iterate through array to check if there is a hit
-        for (let j = 0; j < cacheBlocks.value; j++){
-            if (cache[j] === data_seq[i]){
-                cache[j] = data_seq[i]
-                age[j] = i
-                hits++
-                pass = true
-                j = 99999 
-            }
-        }
-        //If cache still has space then add new data, else begin replacement 
-        if (i < cacheBlocks.value && !pass){
-            cache[i] = data_seq[i]
-            age[i] = i
-            misses++
-        }
-        else if (!pass) {
-            if (LRU == 1){
-                replace = Math.min.apply(null, age)
-                rindex = age.indexOf(replace)
-
-                cache[rindex] = data_seq[i]
-                age[rindex] = i
-                misses++
-            }
-            else {
-                replace = Math.max.apply(null, age)
-                rindex = age.indexOf(replace)
-
-                cache[rindex] = data_seq[i]
-                age[rindex] = i
-                misses++
-            }
-        }
-        pass = false
-    }
-    //debugging
-    console.log("Data",cache)
-    console.log("Age ",age)
-
-    //beginning calculation of statistical output
-
-    console.log("Access Count", access_count)
-    console.log("Hits", hits)
-    console.log("Misses", misses)
-
-    cal_stats()
+// --- Test Case Generators ---
+function getNumBlocks() {
+    return parseInt(document.getElementById('cache-blocks').value) || 4;
 }
 
-//calculates values needed for statistical output
-function cal_stats(){
-    miss_rate = misses/access_count
-    hit_rate = hits/access_count
+document.getElementById('btn-seq').addEventListener('click', () => {
+    const n = getNumBlocks();
+    let seq = [];
+    for (let i = 0; i < 2 * n; i++) seq.push(i);
+    document.getElementById('memory-sequence').value = [...seq, ...seq].join(', ');
+});
 
-    console.log("Hit rate", hit_rate)
-    console.log("Miss rate", miss_rate)
+document.getElementById('btn-mid').addEventListener('click', () => {
+    const n = getNumBlocks();
+    let part1 = [], part2 = [];
+    for (let i = 0; i < n; i++) part1.push(i);
+    for (let i = 0; i < 2 * n; i++) part2.push(i);
+    
+    let rev1 = [...part1].reverse();
+    let rev2 = [...part2].reverse();
+    
+    const finalSeq = [...part1, ...part2, ...part2, ...rev1, ...rev2, ...rev2];
+    document.getElementById('memory-sequence').value = finalSeq.join(', ');
+});
 
-    var AMAT = (CAT*hit_rate) + (MAT*MP)
-    var TMAT = (hits * blockSize.value * CAT) + (misses * blockSize.value * (CAT + MAT)) + (misses * CAT)
+document.getElementById('btn-rand').addEventListener('click', () => {
+    let finalSeq = [];
+    for (let i = 0; i < 64; i++) {
+        finalSeq.push(Math.floor(Math.random() * 1024));
+    }
+    document.getElementById('memory-sequence').value = finalSeq.join(', ');
+});
 
-    console.log("Average Memory Access Time(ns)",AMAT)
-    console.log("Total Memory Access Time(ns)",TMAT)
+// --- Main Simulation Trigger ---
+document.getElementById('run-btn').addEventListener('click', () => {
+    activeIntervals.forEach(clearInterval);
+    activeIntervals = [];
+
+    const cacheBlocks = getNumBlocks();
+    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const sequenceStr = document.getElementById('memory-sequence').value;
+    const cacheTime = parseFloat(document.getElementById('cache-time').value) || 1;
+    const memTime = parseFloat(document.getElementById('mem-time').value) || 10;
+    const readPolicy = document.getElementById('read-policy').value;
+    const viewMode = document.getElementById('view-mode').value;
+
+    const sequence = sequenceStr.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+
+    if (sequence.length === 0) return alert("Please enter a valid memory sequence.");
+
+    const lruData = simulateFA(sequence, cacheBlocks, blockSize, 'LRU', cacheTime, memTime, readPolicy);
+    const mruData = simulateFA(sequence, cacheBlocks, blockSize, 'MRU', cacheTime, memTime, readPolicy);
+
+    renderOutputs('lru', lruData, cacheBlocks, viewMode);
+    renderOutputs('mru', mruData, cacheBlocks, viewMode);
+});
+
+// --- FA Simulation Logic ---
+function simulateFA(sequence, numBlocks, blockSize, policy, cacheTime, memTime, readPolicy) {
+    let cache = []; 
+    let hits = 0, misses = 0, timeStep = 0;
+    let snapshots = [], logs = [];
+
+    for (let i = 0; i < sequence.length; i++) {
+        let block = sequence[i];
+        timeStep++;
+        let isHit = false;
+
+        let index = cache.findIndex(c => c.block === block);
+        
+        if (index !== -1) {
+            isHit = true;
+            hits++;
+            cache[index].lastAccess = timeStep;
+            logs.push(`Step ${timeStep}: Block ${block} -> HIT`);
+        } else {
+            misses++;
+            if (cache.length < numBlocks) {
+                cache.push({ block: block, lastAccess: timeStep });
+                logs.push(`Step ${timeStep}: Block ${block} -> MISS (Stored in empty slot)`);
+            } else {
+                let replaceIdx = 0;
+                for (let j = 1; j < cache.length; j++) {
+                    if (policy === 'LRU' && cache[j].lastAccess < cache[replaceIdx].lastAccess) replaceIdx = j;
+                    if (policy === 'MRU' && cache[j].lastAccess > cache[replaceIdx].lastAccess) replaceIdx = j;
+                }
+                logs.push(`Step ${timeStep}: Block ${block} -> MISS (Evicted Block ${cache[replaceIdx].block})`);
+                cache[replaceIdx] = { block: block, lastAccess: timeStep };
+            }
+        }
+
+        let state = cache.map(c => c.block);
+        while (state.length < numBlocks) state.push("-");
+        snapshots.push({ block: block, isHit: isHit, state: state });
+    }
+
+    // --- RESTORED SPECIFIC MATH LOGIC ---
+    const totalAccesses = sequence.length;
+    const hitRateDec = totalAccesses > 0 ? (hits / totalAccesses) : 0;
+    const missRateDec = totalAccesses > 0 ? (misses / totalAccesses) : 0;
+
+    let MP = 0;
+    if (readPolicy === 'load-through') {
+        MP = cacheTime + memTime + cacheTime;
+    } else {
+        MP = cacheTime + (blockSize * memTime) + cacheTime;
+    }
+
+    const amat = (cacheTime * hitRateDec) + (memTime * MP);
+    const totalTime = (hits * blockSize * cacheTime) + (misses * blockSize * (cacheTime + memTime)) + (misses * cacheTime);
+
+    return { 
+        totalAccesses, 
+        hits, 
+        misses, 
+        hitRate: hitRateDec * 100, 
+        missRate: missRateDec * 100, 
+        amat, 
+        totalTime, 
+        snapshots, 
+        logs 
+    };
+}
+
+// --- Output Rendering ---
+function renderOutputs(prefix, data, numBlocks, viewMode) {
+    document.getElementById(`${prefix}-stats`).innerHTML = `
+        <ul>
+            <li>Total memory access count: <b>${data.totalAccesses}</b></li>
+            <li>Cache hit count: <b>${data.hits}</b></li>
+            <li>Cache miss count: <b>${data.misses}</b></li>
+            <li>Cache hit rate: <b>${data.hitRate.toFixed(2)}%</b></li>
+            <li>Cache miss rate: <b>${data.missRate.toFixed(2)}%</b></li>
+            <li>Average Memory Access Time (AMAT): <b>${data.amat} ns</b></li>
+            <li>Total memory access time: <b>${data.totalTime} ns</b></li>
+        </ul>
+    `;
+
+    const logDiv = document.getElementById(`${prefix}-log`);
+    const tableDiv = document.getElementById(`${prefix}-table`);
+
+    if (viewMode === 'final' || data.snapshots.length === 0) {
+        logDiv.innerHTML = data.logs.join('<br>');
+        logDiv.scrollTop = logDiv.scrollHeight;
+
+        let html = '<table><tr><th>Block #</th><th>Data</th></tr>';
+        let finalState = data.snapshots.length > 0 ? data.snapshots[data.snapshots.length - 1].state : Array(numBlocks).fill("-");
+        for (let i = 0; i < numBlocks; i++) {
+            html += `<tr><td>${i}</td><td>${finalState[i]}</td></tr>`;
+        }
+        tableDiv.innerHTML = html + '</table>';
+    } else {
+        logDiv.innerHTML = '';
+        tableDiv.innerHTML = '';
+        let step = 0;
+
+        let interval = setInterval(() => {
+            if (step >= data.snapshots.length) {
+                clearInterval(interval);
+                return;
+            }
+
+            logDiv.innerHTML += data.logs[step] + '<br>';
+            logDiv.scrollTop = logDiv.scrollHeight;
+
+            let html = '<table><tr><th>Access</th>';
+            for (let i = 0; i <= step; i++) html += `<th>${data.snapshots[i].block} (${data.snapshots[i].isHit ? 'H' : 'M'})</th>`;
+            html += '</tr>';
+
+            for (let row = 0; row < numBlocks; row++) {
+                html += `<tr><td>Block ${row}</td>`;
+                for (let i = 0; i <= step; i++) html += `<td>${data.snapshots[i].state[row]}</td>`;
+                html += '</tr>';
+            }
+            
+            tableDiv.innerHTML = html + '</table>';
+            tableDiv.scrollLeft = tableDiv.scrollWidth;
+            step++;
+        }, 500);
+        
+        activeIntervals.push(interval);
+    }
 }
