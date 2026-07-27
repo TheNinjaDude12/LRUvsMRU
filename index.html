@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine 6 Barebones</title>
+    <title>Machine 6 - Cache Memory</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Machine 6: FA + LRU vs. FA + MRU</h1>
+
+    <div class = "title_container">
+
+
+    </div>
+    <h1 class = "project_title">Machine 6 </h1>
+    <h2 class = "italic">Cache Memory with FA + LRU vs. FA + MRU</h2>
+
 
     <fieldset>
         <legend>Configuration</legend>
-        <label>Block Size (Words) [Power of 2]: <input type="number" id="block-size" value="16"></label><br><br>
-        <label>Number of Cache Blocks [n] (Power of 2): <input type="number" id="cache-blocks" value="4"></label><br><br>
+        <label>Block Size (Words) [Power of 2]: <span class = "space"></span> <input type="number" id="block-size" value="16"></label><br><br>
+        <label>Number of Cache Blocks (n) [Power of 2]: <span class = "space"></span> <input type="number" id="cache-blocks" value="4"></label><br><br>
         <label>Read Policy: 
             <select id="read-policy">
                 <option value="non-load-through">Non-load-through</option>
@@ -20,7 +27,7 @@
             </select>
         </label><br><br>
         <label>View Mode:
-            <select id="view-mode">
+            <select id="view-mode" style = "margin-left: 10px;">
                 <option value="animated">Step-by-Step Animated Trace</option>
                 <option value="final">Final Memory Snapshot Only</option>
             </select>
@@ -29,39 +36,92 @@
 
     <fieldset>
         <legend>Test Cases & Memory Sequence</legend>
+        <label>Read Policy:</label>
         <button id="btn-seq">A. Sequential</button>
         <button id="btn-mid">B. Mid-repeat</button>
         <button id="btn-rand">C. Random</button>
         <br><br>
-        <label>Memory Sequence (Blocks): <input type="text" id="memory-sequence" size="80"></label>
-    </fieldset>
 
-    <fieldset>
-        <legend>Access Times (ns)</legend>
-        <label>Cache Access Time: <input type="number" id="cache-time" value="1"></label>
-        <label>Memory Access Time: <input type="number" id="mem-time" value="10"></label>
+        <div class = "memory-sequence-container">
+
+            <label for="memory-sequence">Memory Sequence (Blocks):</label>
+            <textarea id="memory-sequence" placeholder="Type here..."></textarea>
+
+        </div>
+
     </fieldset>
 
     <br>
-    <button id="run-btn">Run Simulation</button>
+
+    <fieldset>
+        <legend>Simulations</legend>
+        <label>Run Simulations:</label>
+        <button id="run-lru" class = "simulation-button">Run FA + LRU</button>
+        <button id="run-mru" class = "simulation-button">Run FA + MRU</button>
+        <button id="run-both" class = "simulation-button">Run Both</button>
+    </fieldset>
+
+    <br><br>
     <hr>
+    <br><br>
 
     <div id="results">
-        <h2>--- Fully Associative + LRU ---</h2>
-        <div id="lru-stats"></div>
-        <h3>Text Log</h3>
-        <div id="lru-log" class="text-log"></div>
-        <h3>Cache State</h3>
-        <div id="lru-table" class="table-container"></div>
+
+        <fieldset style = "border-color: #3a5a40">
+
+            <legend style = "color: orangered ">Fully Associative + LRU</legend>
+            <label class = "simulation-label">Simulation Statistics:</label>
+            <div id="lru-stats">
+
+                <ul>
+                    <li>Total memory access count:</li>
+                    <li>Cache hit count:</li>
+                    <li>Cache miss count:</li>
+                    <li>Cache hit rate:</li>
+                    <li>Cache miss rate:</li>
+                    <li>Average Memory Access Time (AMAT):</li>
+                    <li>Total memory access time:</li>
+                </ul>
+
+            </div>
+            <h3 class = "simulation-label">Text Log</h3>
+            <div id="lru-log" class="text-log"></div>
+            <h3 class = "simulation-label">Cache State</h3>
+            <div id="lru-table" class="table-container"></div>
+
+
+
+
+        </fieldset>
 
         <br><br>
 
-        <h2>--- Fully Associative + MRU ---</h2>
-        <div id="mru-stats"></div>
-        <h3>Text Log</h3>
-        <div id="mru-log" class="text-log"></div>
-        <h3>Cache State</h3>
-        <div id="mru-table" class="table-container"></div>
+        <fieldset style = "border-color: #3a5a40">
+
+            <legend style = "color: orangered ">Fully Associative + MRU</legend>
+            <label class = "simulation-label">Simulation Statistics</label>
+            <div id="mru-stats">
+
+                <ul>
+                    <li>Total memory access count:</li>
+                    <li>Cache hit count:</li>
+                    <li>Cache miss count:</li>
+                    <li>Cache hit rate:</li>
+                    <li>Cache miss rate:</li>
+                    <li>Average Memory Access Time (AMAT):</li>
+                    <li>Total memory access time:</li>
+                </ul>
+
+            </div>
+            <h3 class = "simulation-label">Text Log</h3>
+            <div id="mru-log" class="text-log"></div>
+            <h3 class = "simulation-label">Cache State</h3>
+            <div id="mru-table" class="table-container"></div>
+
+
+       </fieldset>
+
+
     </div>
 
     <script src="script.js"></script>

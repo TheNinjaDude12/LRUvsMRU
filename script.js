@@ -1,4 +1,10 @@
+
+// Constant Values
+const CACHE_TIME = 1;
+const MEMORY_TIME = 10;
+
 let activeIntervals = [];
+
 
 // --- Test Case Generators ---
 function getNumBlocks() {
@@ -33,16 +39,16 @@ document.getElementById('btn-rand').addEventListener('click', () => {
     document.getElementById('memory-sequence').value = finalSeq.join(', ');
 });
 
-// --- Main Simulation Trigger ---
-document.getElementById('run-btn').addEventListener('click', () => {
-    activeIntervals.forEach(clearInterval);
+
+// --- Main Simulation Trigger - LRU ---
+document.getElementById('run-lru').addEventListener('click', () => {
+
+   activeIntervals.forEach(clearInterval);
     activeIntervals = [];
 
     const cacheBlocks = getNumBlocks();
     const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
     const sequenceStr = document.getElementById('memory-sequence').value;
-    const cacheTime = parseFloat(document.getElementById('cache-time').value) || 1;
-    const memTime = parseFloat(document.getElementById('mem-time').value) || 10;
     const readPolicy = document.getElementById('read-policy').value;
     const viewMode = document.getElementById('view-mode').value;
 
@@ -50,18 +56,68 @@ document.getElementById('run-btn').addEventListener('click', () => {
 
     if (sequence.length === 0) return alert("Please enter a valid memory sequence.");
 
-    const lruData = simulateFA(sequence, cacheBlocks, blockSize, 'LRU', cacheTime, memTime, readPolicy);
-    const mruData = simulateFA(sequence, cacheBlocks, blockSize, 'MRU', cacheTime, memTime, readPolicy);
+    const lruData = simulateFA(sequence, cacheBlocks, blockSize, 'LRU', CACHE_TIME, MEMORY_TIME, readPolicy);
+
+    renderOutputs('lru', lruData, cacheBlocks, viewMode);
+
+})
+
+
+// --- Main Simulation Trigger - MRU ---
+document.getElementById('run-mru').addEventListener('click', () => {
+
+   activeIntervals.forEach(clearInterval);
+    activeIntervals = [];
+
+    const cacheBlocks = getNumBlocks();
+    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const sequenceStr = document.getElementById('memory-sequence').value;
+    const readPolicy = document.getElementById('read-policy').value;
+    const viewMode = document.getElementById('view-mode').value;
+
+    const sequence = sequenceStr.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+
+    if (sequence.length === 0) return alert("Please enter a valid memory sequence.");
+
+    const mruData = simulateFA(sequence, cacheBlocks, blockSize, 'MRU', CACHE_TIME, MEMORY_TIME, readPolicy);
+
+    renderOutputs('mru', mruData, cacheBlocks, viewMode);
+
+});
+
+
+// --- Main Simulation Trigger - Both ---
+document.getElementById('run-both').addEventListener('click', () => {
+    activeIntervals.forEach(clearInterval);
+    activeIntervals = [];
+
+    const cacheBlocks = getNumBlocks();
+    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const sequenceStr = document.getElementById('memory-sequence').value;
+    const readPolicy = document.getElementById('read-policy').value;
+    const viewMode = document.getElementById('view-mode').value;
+
+    const sequence = sequenceStr.split(',').map(item => parseInt(item.trim())).filter(item => !isNaN(item));
+
+    if (sequence.length === 0) return alert("Please enter a valid memory sequence.");
+
+    const lruData = simulateFA(sequence, cacheBlocks, blockSize, 'LRU', CACHE_TIME, MEMORY_TIME, readPolicy);
+    const mruData = simulateFA(sequence, cacheBlocks, blockSize, 'MRU', CACHE_TIME, MEMORY_TIME, readPolicy);
 
     renderOutputs('lru', lruData, cacheBlocks, viewMode);
     renderOutputs('mru', mruData, cacheBlocks, viewMode);
 });
+
+
+
+
 
 // --- FA Simulation Logic ---
 function simulateFA(sequence, numBlocks, blockSize, policy, cacheTime, memTime, readPolicy) {
     let cache = []; 
     let hits = 0, misses = 0, timeStep = 0;
     let snapshots = [], logs = [];
+    
 
     for (let i = 0; i < sequence.length; i++) {
         let block = sequence[i];
