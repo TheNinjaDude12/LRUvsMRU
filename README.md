@@ -1,7 +1,8 @@
-# Cache Simulation Analysis - 
+# Cache Simulation Analysis - Machine 6
 ---
 **Course**: CSARCH2
 **Section**: S40
+
 **Group Members**:
 - Domingo, Stefan Manuel
 - Escano, Ewan Rafael
