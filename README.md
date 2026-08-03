@@ -17,12 +17,12 @@ Here are the parameters for cache simulation.
 
 -   **Mapping Technique**: Fully Associative
 -   **Replacement Policies Evaluated**: Least Recently Used (LRU) vs. Most Recently Used (MRU)
--   **Block Size**: 16 Words.
--   **Number of Cache Blocks (n)**: 4.
+-   **Block Size**: 16 Words minimum.
+-   **Number of Cache Blocks (n)**: 4 minimum.
 -   **Read Policy**: Non-load-through.
 
 ---
-## 2 Test Cases
+## 2 Test Cases (16 word block size with 4 cache blocks)
 ### Test Case 1: Sequential
 -   **Memory Sequence**: `0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7`
 
