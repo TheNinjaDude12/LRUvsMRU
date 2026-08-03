@@ -34,7 +34,7 @@ Here are the parameters for cache simulation.
 | Cache miss count | 16 | 12 |
 | Cache hit rate | 0.00% | 25.00% |
 | Cache miss rate | 100.00% | 75.00% |
-| Average Memory Access Time (AMAT) | 1620 ns | 1620.25 ns |
+| Average Memory Access Time (AMAT) | 162 ns | 121.75 ns |
 | Total memory access time | 2832 ns | 2188 ns |
 
 | Block | LRU Data | MRU Data |
@@ -55,7 +55,7 @@ Here are the parameters for cache simulation.
 | Cache miss count | 36 | 23 |
 | Cache hit rate | 10.00% | 42.50% |
 | Cache miss rate | 90.00% | 57.50% |
-| Average Memory Access Time (AMAT) | 1620.1 ns | 1620.425 ns |
+| Average Memory Access Time (AMAT) | 145.9 ns | 93.58 ns |
 | Total memory access time | 6436 ns | 4343 ns |
 
 | Block | LRU Data | MRU Data |
@@ -76,7 +76,7 @@ Here are the parameters for cache simulation.
 | Cache miss count | 64 | 62 |
 | Cache hit rate | 0.00% | 3.13% |
 | Cache miss rate | 100.00% | 96.88% |
-| Average Memory Access Time (AMAT) | 1620 ns | 1620.03125 ns |
+| Average Memory Access Time (AMAT) | 162 ns | 156.97 ns |
 | Total memory access time | 11328 ns | 11006 ns |
 
 **Cache State**
@@ -96,14 +96,14 @@ Here are the parameters for cache simulation.
 
   - Test Case 3: MRU yielded a 3.13% hit rate vs. 0.00% for LRU
 
-- While the Average Memory Access Time (AMAT) per access shows a small difference variation between the two operations with an average of 1620 ns, comparing Total Memory Access Time suggests significant performance gains under MRU:  
+- MRU achieved a lower Average Memory Access Time (AMAT) than LRU in all three test cases. In the sequential test, MRU reduced AMAT from 162.00 ns to 121.75 ns. In the mid-repeat test, MRU reduced AMAT from 145.90 ns to 93.58 ns, which was its largest advantage. In the random test, MRU slightly reduced AMAT from 162.00 ns to 156.97 ns, comparing Total Memory Access Time suggests significant performance gains under MRU:  
   - Test Case 1: MRU reduced total access time by 644 ns.
   - Test Case 2: MRU reduced total access time by 2093 ns.
   - Test Case 3: MRU reduced total access time by 322 ns.
 
 ---
 ## 4 Conclusion
-Based on our simulation results, the Most Recently Used (MRU) performed better than the Least Recently Used (LRU) across all three test sequences with higher hit rates and faster overall memory access times.
+Based on our simulation results, the Most Recently Used (MRU) performed better than the Least Recently Used (LRU) across all three test sequences by producing higher hit rates, lower AMAT values, and lower total memory access times.
 
 This occurs because our tests focused on repeating patterns and loops. In these specific situations, LRU constantly removes the wrong data right before they are needed again, which slows down the entire system. MRU avoids this problem by holding onto older data and only replacing the newest item, keeping parts of the cache useful.
 
