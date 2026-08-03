@@ -105,6 +105,6 @@ Here are the parameters for cache simulation.
 ## 4 Conclusion
 Based on our simulation results, the Most Recently Used (MRU) performed better than the Least Recently Used (LRU) across all three test sequences with higher hit rates and faster overall memory access times.
 
-This occurs because our testes focused on repeating patterns and loops. In these specific situations, LRU constantly removes the wrong data right before they are needed again, which slows down the entire system. MRU avoids this problem by holding onto older data and only replacing the newest item, keeping parts of the cache useful.
+This occurs because our tests focused on repeating patterns and loops. In these specific situations, LRU constantly removes the wrong data right before they are needed again, which slows down the entire system. MRU avoids this problem by holding onto older data and only replacing the newest item, keeping parts of the cache useful.
 
 MRU is much better at handling repeating loops and continuous scans. Therefore, software design could consider using MRU for specialized tasks such as database searches where data is processed in repetitive patterns.
