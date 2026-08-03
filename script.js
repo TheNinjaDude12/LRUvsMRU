@@ -7,8 +7,36 @@ let activeIntervals = [];
 
 
 // --- Test Case Generators ---
+function isPowerOfTwo(n) {
+  if (n == 0)
+    return false;
+
+  return parseInt((Math.ceil((Math.log(n) / Math.log(2)))))
+    == parseInt((Math.floor(((Math.log(n) / Math.log(2))))));
+}
+
 function getNumBlocks() {
-    return parseInt(document.getElementById('cache-blocks').value) || 4;
+    const n = parseInt(document.getElementById('cache-blocks').value)
+    if (isPowerOfTwo(n) && n > 3){
+        return n
+    }
+    else{
+        alert("Invalid block count given, reverting to minimum block count of 4")
+        document.getElementById('cache-blocks').value = 4;
+        return 4
+    }
+}
+function getNumWords() {
+    const n = parseInt(document.getElementById('block-size').value)
+    console.log("this is running")
+    if (isPowerOfTwo(n) && n > 1){
+        return n
+    }
+    else{
+        alert("Invalid word count given, reverting to minimum word count of 2")
+        document.getElementById('block-size').value = 2;
+        return 2
+    }
 }
 
 document.getElementById('btn-seq').addEventListener('click', () => {
@@ -39,15 +67,14 @@ document.getElementById('btn-rand').addEventListener('click', () => {
     document.getElementById('memory-sequence').value = finalSeq.join(', ');
 });
 
-
 // --- Main Simulation Trigger - LRU ---
 document.getElementById('run-lru').addEventListener('click', () => {
 
-   activeIntervals.forEach(clearInterval);
+    activeIntervals.forEach(clearInterval);
     activeIntervals = [];
 
     const cacheBlocks = getNumBlocks();
-    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const blockSize = getNumWords();
     const sequenceStr = document.getElementById('memory-sequence').value;
     const readPolicy = document.getElementById('read-policy').value;
     const viewMode = document.getElementById('view-mode').value;
@@ -66,11 +93,11 @@ document.getElementById('run-lru').addEventListener('click', () => {
 // --- Main Simulation Trigger - MRU ---
 document.getElementById('run-mru').addEventListener('click', () => {
 
-   activeIntervals.forEach(clearInterval);
+    activeIntervals.forEach(clearInterval);
     activeIntervals = [];
 
     const cacheBlocks = getNumBlocks();
-    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const blockSize = getNumWords();
     const sequenceStr = document.getElementById('memory-sequence').value;
     const readPolicy = document.getElementById('read-policy').value;
     const viewMode = document.getElementById('view-mode').value;
@@ -92,7 +119,7 @@ document.getElementById('run-both').addEventListener('click', () => {
     activeIntervals = [];
 
     const cacheBlocks = getNumBlocks();
-    const blockSize = parseInt(document.getElementById('block-size').value) || 4; 
+    const blockSize = getNumWords();
     const sequenceStr = document.getElementById('memory-sequence').value;
     const readPolicy = document.getElementById('read-policy').value;
     const viewMode = document.getElementById('view-mode').value;
