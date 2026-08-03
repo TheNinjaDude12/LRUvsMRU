@@ -12,7 +12,7 @@
 
 
 ---
-## 1 System Specifications
+## 1. System Specifications
 Here are the parameters for cache simulation.
 
 -   **Mapping Technique**: Fully Associative
@@ -22,7 +22,7 @@ Here are the parameters for cache simulation.
 -   **Read Policy**: Non-load-through.
 
 ---
-## 2 Test Cases (16 word block size with 4 cache blocks)
+## 2. Test Cases (16 word block size with 4 cache blocks)
 ### Test Case 1: Sequential
 -   **Memory Sequence**: `0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7`
 
@@ -88,7 +88,7 @@ Here are the parameters for cache simulation.
 | 3 | 759 | 759 |
 
 ---
-## 3 Analysis & Discussion
+## 3. Analysis & Discussion
 - MRU outperforms LRU on all test case sequences as it yields higher hit rates and lower total memory access time.
   - Test Case 1: MRU yielded a 25.00% hit rate vs. 0.00% for LRU
 
@@ -102,7 +102,7 @@ Here are the parameters for cache simulation.
   - Test Case 3: MRU reduced total access time by 322 ns.
 
 ---
-## 4 Conclusion
+## 4. Conclusion
 Based on our simulation results, the Most Recently Used (MRU) performed better than the Least Recently Used (LRU) across all three test sequences by producing higher hit rates, lower AMAT values, and lower total memory access times.
 
 This occurs because our tests focused on repeating patterns and loops. In these specific situations, LRU constantly removes the wrong data right before they are needed again, which slows down the entire system. MRU avoids this problem by holding onto older data and only replacing the newest item, keeping parts of the cache useful.
