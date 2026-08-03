@@ -164,7 +164,7 @@ function simulateFA(sequence, numBlocks, blockSize, policy, cacheTime, memTime, 
         MP = cacheTime + (blockSize * memTime) + cacheTime;
     }
 
-    const amat = (cacheTime * hitRateDec) + (memTime * MP);
+    const amat = (cacheTime * hitRateDec) + (missRateDec * MP);
     const totalTime = (hits * blockSize * cacheTime) + (misses * blockSize * (cacheTime + memTime)) + (misses * cacheTime);
 
     return { 
