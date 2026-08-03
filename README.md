@@ -39,10 +39,10 @@ Here are the parameters for cache simulation.
 
 | Block | LRU Data | MRU Data |
 | ---: | ---: | ---: |
-| 0 | 3 | 4 |
-| 1 | 2 | 0 |
-| 2 | 1 | 3 |
-| 3 | 0 | 1 |
+| 0 | 4 | 0 |
+| 1 | 5 | 1 |
+| 2 | 6 | 6 |
+| 3 | 7 | 7 |
 
 ### Test Case 2: Mid-repeat
 -   **Sequence Example**: `0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 3, 2, 1, 0, 7, 6, 5, 4, 3, 2, 1, 0, 7, 6, 5, 4, 3, 2, 1, 0`
@@ -60,10 +60,10 @@ Here are the parameters for cache simulation.
 
 | Block | LRU Data | MRU Data |
 | ---: | ---: | ---: |
-| 0 | 4 | 0 |
-| 1 | 5 | 1 |
-| 2 | 6 | 6 |
-| 3 | 7 | 7 |
+| 0 | 3 | 4 |
+| 1 | 2 | 0 |
+| 2 | 1 | 3 |
+| 3 | 0 | 1 |
 
 ### Test Case 3: Random
 
