@@ -28,7 +28,6 @@ function getNumBlocks() {
 }
 function getNumWords() {
     const n = parseInt(document.getElementById('block-size').value)
-    console.log("this is running")
     if (isPowerOfTwo(n) && n > 1){
         return n
     }

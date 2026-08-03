@@ -12,19 +12,27 @@
 - Garcia Jr., Frederick Voltair
 - Gutierrez, Hanz Gabriel
 
-
+## Machine Capabilities
+This program simulates a cache memory machine, the machine is capable of the following:  
+-   **Mapping Algorithm**: Fully Associative
+-   **Replacement Algorithms**: Least Recently Used (LRU) and Most Recently Used (MRU)
+-   **Block Size**: Minimum of 2 words, must also be a power of 2.
+-   **Number of Cache Blocks (n)**: Minimum of 4 blocks, must also be a power of 2.
+-   **Read Policy**: Non-load-through and Load-through.  
+-   **Cache Access Time**: 1ns.  
+-   **Memory Access Time**: 10ns.  
 ---
 ## 1. System Specifications
 Here are the parameters for cache simulation.
 
 -   **Mapping Technique**: Fully Associative
 -   **Replacement Policies Evaluated**: Least Recently Used (LRU) vs. Most Recently Used (MRU)
--   **Block Size**: 16 Words minimum.
--   **Number of Cache Blocks (n)**: 4 minimum.
+-   **Block Size**: 16 Words.
+-   **Number of Cache Blocks (n)**: 4.
 -   **Read Policy**: Non-load-through.
 
 ---
-## 2. Test Cases (16 word block size with 4 cache blocks)
+## 2. Test Cases
 ### Test Case 1: Sequential
 -   **Memory Sequence**: `0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7`
 
