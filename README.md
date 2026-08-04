@@ -97,6 +97,31 @@ Here are the parameters for cache simulation.
 | 2 | 370 | 588 |
 | 3 | 759 | 759 |
 
+
+## Screenshots
+### Test Case 1: Sequential
+
+#### Fully Associative + LRU
+![Sequential LRU](screenshots/sequential-lru.png)
+
+#### Fully Associative + MRU
+![Sequential MRU](screenshots/sequential-mru.png)
+
+### Test Case 2: Mid-repeat
+
+#### Fully Associative + LRU
+![Mid-repeat LRU](screenshots/mid-sequence-lru.png)
+
+#### Fully Associative + MRU
+![Mid-repeat MRU](screenshots/mid-sequence-mru.png)
+
+### Test Case 3: Random
+
+#### Fully Associative + LRU
+![Random LRU](screenshots/random-lru.png)
+
+#### Fully Associative + MRU
+![Random MRU](screenshots/random-mru.png)
 ---
 ## 3. Analysis & Discussion
 - MRU outperforms LRU on all test case sequences as it yields higher hit rates and lower total memory access time.
